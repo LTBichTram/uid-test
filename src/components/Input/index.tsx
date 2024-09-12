@@ -59,6 +59,21 @@ const Input = (props: TForm) => {
             ))}
           </select>
         );
+      case "multi-select":
+        return (
+          <select
+            value={value}
+            multiple
+            onChange={onChange}
+            className="cursor-pointer"
+          >
+            {options?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        );
       case "price":
         return (
           <div

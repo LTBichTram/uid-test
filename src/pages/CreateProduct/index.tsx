@@ -10,6 +10,7 @@ import useProductTypesApi from "../../hooks/useProductTypesApi";
 import { TCreateProduct } from "../../types/form.type";
 import { useDispatch } from "react-redux";
 import { setProductTypes } from "../../stores/reducers/product.reducer";
+import useTagsApi from "../../hooks/useTagsApi";
 
 const schema = yup.object({
   title: yup.string().trim().required("Title is required!"),
@@ -20,6 +21,7 @@ const schema = yup.object({
     .required("Price is required!")
     .matches(/^\d*\.?\d*$/, "Please enter correct price format!"),
   productType: yup.string(),
+  tags: yup.array(),
 });
 
 export default function CreateProduct() {
@@ -31,10 +33,11 @@ export default function CreateProduct() {
   } = useForm<TCreateProduct>({
     resolver: yupResolver(schema),
   });
-  const { loading, error, fetchProducts, createProduct } = useProductApi();
+  const { createProduct } = useProductApi();
   const { productTypes, fetchProductTypes } = useProductTypesApi();
+  const { tags, fetchTags } = useTagsApi();
 
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: TCreateProduct) => {
     createProduct(data);
   };
 
@@ -53,6 +56,22 @@ export default function CreateProduct() {
         )
       );
   }, [dispatch, productTypes]);
+
+  useEffect(() => {
+    fetchTags();
+  }, [fetchTags]);
+
+  useEffect(() => {
+    if (tags)
+      dispatch(
+        setProductTypes(
+          tags?.map((type) => ({
+            value: type.value,
+            label: type.label,
+          }))
+        )
+      );
+  }, [dispatch, tags]);
 
   return (
     <div>
@@ -95,6 +114,18 @@ export default function CreateProduct() {
           label="Product type"
           options={
             productTypes?.map((type) => ({
+              label: type?.label,
+              value: type?.value,
+            })) || []
+          }
+        />
+        <Input
+          control={control}
+          name="tags"
+          type="multi-select"
+          label="Tags"
+          options={
+            tags?.map((type) => ({
               label: type?.label,
               value: type?.value,
             })) || []

@@ -6,9 +6,11 @@ export type TProduct = {
   description: string;
   price: string;
   productType?: string;
+  tags?: string[];
 };
 
 export type TProductStore = {
   products: TProduct[];
   productTypes: TOption[];
+  tags: TOption[];
 };

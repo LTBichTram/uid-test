@@ -10,7 +10,7 @@ export type TInputBase<T extends FieldValues> = {
   classNames?: string;
   disabled?: boolean;
   autoFocus?: boolean;
-  type?: "number" | "text" | "ckeditor" | "price" | "select";
+  type?: "number" | "text" | "ckeditor" | "price" | "select" | "multi-select";
   maxLength?: number;
   options?: TOption[];
 };
@@ -27,4 +27,5 @@ export type TCreateProduct = {
   description: string;
   price: string;
   productType?: string;
+  tags?: string[];
 };
