@@ -1,15 +1,15 @@
 import { createBrowserRouter } from "react-router-dom";
-import HomeLayout from "../layouts/HomeLayout";
-import NotFound from "../pages/NotFound";
-import { path } from "./path";
-import Home from "../pages/Home";
+import MainLayout from "../layouts/MainLayout";
 import CreateProduct from "../pages/CreateProduct";
+import Home from "../pages/Home";
+import NotFound from "../pages/NotFound";
 import Products from "../pages/Products";
+import { path } from "./path";
 
 export const routes = createBrowserRouter([
   {
     path: "",
-    element: <HomeLayout />,
+    element: <MainLayout />,
     children: [
       {
         path: path.home,
