@@ -14,6 +14,7 @@ const schema = yup.object({
     .trim()
     .required("Price is required!")
     .matches(/^\d*\.?\d*$/, "Please enter correct price format!"),
+  productType: yup.string(),
 });
 
 export default function CreateProduct() {

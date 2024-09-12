@@ -9,7 +9,7 @@ type TInputElement = {
   onChange: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
   >;
-  value: string | number;
+  value: string;
   onBlur: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
 };
 
@@ -120,7 +120,7 @@ const Input = (props: TForm) => {
             >
               <span>{label}</span>
             </div>
-            {InputElement({ onChange, value, onBlur })}
+            {InputElement({ onChange, value: value || "", onBlur })}
           </div>
         )}
       />

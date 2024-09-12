@@ -16,7 +16,7 @@ export type TInputBase<T extends FieldValues> = {
 };
 
 export type TOption = {
-  value: string | number;
+  value: string;
   label: string;
 };
 
@@ -26,7 +26,5 @@ export type TCreateProduct = {
   title: string;
   description: string;
   price: string;
-  //   media: string;
-  //   tags: string[];
-  productType: string;
+  productType?: string;
 };
