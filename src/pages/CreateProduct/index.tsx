@@ -1,13 +1,15 @@
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { TCreateProduct, TOption } from "../../types/form.type";
-import Input from "../../components/Input";
-import Button from "../../components/Button";
-import { IoIosAdd } from "react-icons/io";
-import useProductApi from "../../hooks/useProductApi";
 import { useEffect } from "react";
-import { useRootSelector } from "../../stores/reducers/root";
+import { useForm } from "react-hook-form";
+import { IoIosAdd } from "react-icons/io";
+import * as yup from "yup";
+import Button from "../../components/Button";
+import Input from "../../components/Input";
+import useProductApi from "../../hooks/useProductApi";
+import useProductTypesApi from "../../hooks/useProductTypesApi";
+import { TCreateProduct } from "../../types/form.type";
+import { useDispatch } from "react-redux";
+import { setProductTypes } from "../../stores/reducers/product.reducer";
 
 const schema = yup.object({
   title: yup.string().trim().required("Title is required!"),
@@ -21,6 +23,7 @@ const schema = yup.object({
 });
 
 export default function CreateProduct() {
+  const dispatch = useDispatch();
   const {
     control,
     handleSubmit,
@@ -29,15 +32,27 @@ export default function CreateProduct() {
     resolver: yupResolver(schema),
   });
   const { loading, error, fetchProducts, createProduct } = useProductApi();
-  const products = useRootSelector((state) => state.product.products);
+  const { productTypes, fetchProductTypes } = useProductTypesApi();
+
   const onSubmit = async (data: any) => {
     createProduct(data);
   };
 
   useEffect(() => {
-    fetchProducts();
-    console.log(products);
-  }, [fetchProducts]);
+    fetchProductTypes();
+  }, [fetchProductTypes]);
+
+  useEffect(() => {
+    if (productTypes)
+      dispatch(
+        setProductTypes(
+          productTypes?.map((type) => ({
+            value: type.value,
+            label: type.label,
+          }))
+        )
+      );
+  }, [dispatch, productTypes]);
 
   return (
     <div>
@@ -73,13 +88,18 @@ export default function CreateProduct() {
           placeholder="22.33"
           maxLength={20}
         />
-        {/* <Input
+        <Input
           control={control}
           name="productType"
           type="select"
           label="Product type"
-          options={productsType}
-        /> */}
+          options={
+            productTypes?.map((type) => ({
+              label: type?.label,
+              value: type?.value,
+            })) || []
+          }
+        />
         <Button className="w-fit m-auto" leftIcon={<IoIosAdd size={20} />}>
           Create now
         </Button>
@@ -87,26 +107,3 @@ export default function CreateProduct() {
     </div>
   );
 }
-
-const productsType: TOption[] = [
-  {
-    value: "dog_food",
-    label: "Dog Food",
-  },
-  {
-    value: "accessories_supplies",
-    label: "Accessories and Supplies",
-  },
-  {
-    value: "health_care_products",
-    label: "Health Care Products",
-  },
-  {
-    value: "clothing_accessories",
-    label: "Clothing and Accessories",
-  },
-  {
-    value: "services",
-    label: "Services",
-  },
-];

@@ -1,3 +1,5 @@
+import { TOption } from "./form.type";
+
 export type TProduct = {
   id: string;
   title: string;
@@ -8,4 +10,5 @@ export type TProduct = {
 
 export type TProductStore = {
   products: TProduct[];
+  productTypes: TOption[];
 };

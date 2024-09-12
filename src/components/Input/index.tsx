@@ -47,7 +47,9 @@ const Input = (props: TForm) => {
           <select
             value={value}
             onChange={onChange}
-            defaultValue={options && options[0].value}
+            defaultValue={
+              (options && options.length > 0 && options[0].value) || ""
+            }
             className="cursor-pointer"
           >
             {options?.map((option) => (

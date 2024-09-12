@@ -1,9 +1,9 @@
 import { useState, useCallback } from "react";
 import { supabase } from "../services/supabaseClient";
 import { TProduct } from "../types/product.type";
-import { setProducts } from "../stores/reducers/product.reducer";
 
 const useProductApi = () => {
+  const [products, setProducts] = useState<TProduct[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -17,7 +17,6 @@ const useProductApi = () => {
     if (error) {
       setError(error.message);
     } else {
-      console.log(products);
       setProducts(products);
     }
     setLoading(false);
@@ -116,9 +115,10 @@ const useProductApi = () => {
   //   }, []);
 
   return {
-    loading, // Trạng thái đang tải
+    products,
+    loading,
     error,
-    fetchProductById, // Lấy một sản phẩm cụ thể
+    fetchProductById,
     createProduct,
     fetchProducts,
   };

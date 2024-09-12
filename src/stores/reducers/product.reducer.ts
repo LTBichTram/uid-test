@@ -3,6 +3,7 @@ import { TProductStore } from "../../types/product.type";
 
 const initialState: TProductStore = {
   products: [],
+  productTypes: [],
 };
 
 const productSlice = createSlice({
@@ -15,9 +16,15 @@ const productSlice = createSlice({
         products: action.payload,
       };
     },
+    setProductTypes: (state, action) => {
+      return {
+        ...state,
+        productTypes: action.payload,
+      };
+    },
   },
 });
 
-export const { setProducts } = productSlice.actions;
+export const { setProducts, setProductTypes } = productSlice.actions;
 
 export default productSlice.reducer;
