@@ -8,3 +8,18 @@
   --primary: #39cdba;
   --secondary: #e4804b;
 }
+
+html::-webkit-scrollbar,
+.scroll-ruler::-webkit-scrollbar {
+  width: 8px;
+  background-color: #f1f5f9;
+}
+html::-webkit-scrollbar-thumb,
+.scroll-ruler::-webkit-scrollbar-thumb {
+  background-color: #cbd5e1;
+  border-radius: 10px;
+}
+html::-webkit-scrollbar-track,
+.scroll-ruler::-webkit-scrollbar-track {
+  border-color: #cbd5e1;
+}
