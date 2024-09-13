@@ -9,6 +9,7 @@ import useTagsApi from "../../hooks/useTagsApi";
 import { TColumn } from "../../types/common.type";
 import { TProduct } from "../../types/product.type";
 import Drawer from "../../components/Drawer";
+import { useRootSelector } from "../../stores/reducers/root";
 
 export default function Products() {
   const { loading, fetchProducts, products, deleteProduct, error } =
@@ -17,10 +18,11 @@ export default function Products() {
     undefined
   );
   const { productTypes, fetchProductTypes } = useProductTypesApi();
+  const fetchUpdate = useRootSelector((state) => state.product?.fetchUpdate);
   const { tags, fetchTags } = useTagsApi();
   useEffect(() => {
     fetchProducts();
-  }, [fetchProducts]);
+  }, [fetchProducts, fetchUpdate]);
 
   const columns: TColumn[] = [
     { title: "Title" },

@@ -23,6 +23,7 @@ export type TOption = {
 export type TForm = TInputBase<TCreateProduct>;
 
 export type TCreateProduct = {
+  id?: number;
   title: string;
   description: string;
   price: string;

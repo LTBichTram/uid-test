@@ -2,19 +2,20 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { IoIosAdd } from "react-icons/io";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 import * as yup from "yup";
 import Button from "../../components/Button";
 import Input from "../../components/Input";
 import useProductApi from "../../hooks/useProductApi";
 import useProductTypesApi from "../../hooks/useProductTypesApi";
-import { TCreateProduct } from "../../types/form.type";
-import { useDispatch } from "react-redux";
+import useTagsApi from "../../hooks/useTagsApi";
 import {
+  setFetchUpdate,
   setProductTypes,
   setTags,
 } from "../../stores/reducers/product.reducer";
-import useTagsApi from "../../hooks/useTagsApi";
-import { toast } from "react-toastify";
+import { TCreateProduct } from "../../types/form.type";
 import { TProduct } from "../../types/product.type";
 
 const schema = yup.object().shape({
@@ -31,9 +32,11 @@ const schema = yup.object().shape({
 export default function ActionProduct({
   btnText,
   dfValue,
+  onClose,
 }: {
   btnText: string;
   dfValue?: TProduct;
+  onClose?: () => void;
 }) {
   const dispatch = useDispatch();
   const {
@@ -44,7 +47,7 @@ export default function ActionProduct({
   } = useForm<TCreateProduct>({
     resolver: yupResolver(schema),
   });
-  const { createProduct, error } = useProductApi();
+  const { createProduct, error, updateProduct } = useProductApi();
   const { productTypes, fetchProductTypes } = useProductTypesApi();
   const { tags, fetchTags } = useTagsApi();
 
@@ -54,8 +57,18 @@ export default function ActionProduct({
       tags: data?.tags?.map((tag) => tag.value),
       productType: data?.productType?.value,
     };
-    createProduct(dataConvert);
-    if (!error) toast.success("Create successfully!");
+    if (dfValue) {
+      updateProduct(dfValue.id, dataConvert);
+      if (!error) {
+        toast.success("Edit successfully!");
+        // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+        onClose && onClose();
+        dispatch(setFetchUpdate());
+      }
+    } else {
+      createProduct(dataConvert);
+      if (!error) toast.success("Create successfully!");
+    }
     reset();
   };
 
@@ -90,6 +103,23 @@ export default function ActionProduct({
         )
       );
   }, [dispatch, tags]);
+
+  useEffect(() => {
+    if (dfValue) {
+      reset({
+        id: dfValue.id,
+        description: dfValue.description,
+        price: dfValue.price,
+        productType: productTypes.find(
+          (item) => item.value === dfValue?.productType
+        ),
+        title: dfValue.title,
+        tags: dfValue?.tags?.map((item) =>
+          tags.find((tag) => tag.value === item)
+        ),
+      });
+    } else reset({});
+  }, [dfValue]);
 
   return (
     <form

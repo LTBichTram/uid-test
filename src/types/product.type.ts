@@ -13,4 +13,5 @@ export type TProductStore = {
   products: TProduct[];
   productTypes: TOption[];
   tags: TOption[];
+  fetchUpdate?: boolean;
 };

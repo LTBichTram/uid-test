@@ -29,7 +29,11 @@ export default function Drawer(props: TDrawer) {
           {title}
         </div>
         <div className="py-4">
-          <ActionProduct btnText="Edit now" dfValue={dfValue} />
+          <ActionProduct
+            btnText="Edit now"
+            dfValue={dfValue}
+            onClose={onClose}
+          />
         </div>
       </div>
     </>

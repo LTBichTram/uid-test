@@ -5,6 +5,7 @@ const initialState: TProductStore = {
   products: [],
   productTypes: [],
   tags: [],
+  fetchUpdate: false,
 };
 
 const productSlice = createSlice({
@@ -29,9 +30,16 @@ const productSlice = createSlice({
         tags: action.payload,
       };
     },
+    setFetchUpdate: (state) => {
+      return {
+        ...state,
+        fetchUpdate: !state?.fetchUpdate,
+      };
+    },
   },
 });
 
-export const { setProducts, setProductTypes, setTags } = productSlice.actions;
+export const { setProducts, setProductTypes, setTags, setFetchUpdate } =
+  productSlice.actions;
 
 export default productSlice.reducer;
