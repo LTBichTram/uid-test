@@ -1,8 +1,8 @@
-import { Control, FieldName, FieldValues } from "react-hook-form";
+import { Control, FieldPath, FieldValues } from "react-hook-form";
 
 export type TInputBase<T extends FieldValues> = {
   control: Control<T>;
-  name: FieldName<T>;
+  name: FieldPath<T>;
   error?: string;
   require?: boolean;
   label?: string;
@@ -26,6 +26,6 @@ export type TCreateProduct = {
   title: string;
   description: string;
   price: string;
-  productType?: string;
-  tags?: string[];
+  productType?: TOption;
+  tags?: TOption[];
 };

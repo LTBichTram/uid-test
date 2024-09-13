@@ -7,6 +7,7 @@ import { TColumn } from "../../types/common.type";
 export default function Products() {
   const { loading, fetchProducts, products } = useProductApi();
   const productTypes = useRootSelector((state) => state.product.productTypes);
+  const tags = useRootSelector((state) => state.product.tags);
   useEffect(() => {
     fetchProducts();
   }, [fetchProducts]);
@@ -15,9 +16,8 @@ export default function Products() {
     { title: "Title" },
     { title: "Price" },
     { title: "Product type" },
+    { title: "Tags" },
   ];
-
-  console.log(productTypes);
 
   return (
     <div>
@@ -61,6 +61,15 @@ export default function Products() {
                         (type) => type.value === product?.productType
                       )?.label
                     }
+                  </td>
+                  <td className="border-b border-slate-200 p-4 text-slate-800 ">
+                    <div className="flex flex-wrap gap-2">
+                      {product?.tags?.map((tag) => (
+                        <div className="rounded-full p-1 px-2 text-primary font-medium bg-primary/10">
+                          {tags?.find((item) => item.value === tag)?.label}
+                        </div>
+                      ))}
+                    </div>
                   </td>
                 </tr>
               ))}

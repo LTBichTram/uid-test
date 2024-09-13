@@ -1,15 +1,17 @@
-import { Controller } from "react-hook-form";
-import { TForm } from "../../types/form.type";
-import "./style.scss";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { useState } from "react";
+import { Controller } from "react-hook-form";
+import Select from "react-select";
+import makeAnimated from "react-select/animated";
+import { TForm, TOption } from "../../types/form.type";
+import "./style.scss";
 
 type TInputElement = {
   onChange: React.ChangeEventHandler<
     HTMLTextAreaElement | HTMLInputElement | HTMLSelectElement
   >;
-  value: string;
+  value: string | string[] | TOption[] | TOption;
   onBlur: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
 };
 
@@ -31,50 +33,57 @@ const Input = (props: TForm) => {
 
   const InputElement = ({ onChange, value, onBlur }: TInputElement) => {
     switch (type) {
-      case "ckeditor":
+      case "ckeditor": {
+        const valueText = value as string;
         return (
           <CKEditor
             editor={ClassicEditor}
-            data={value as never}
+            data={valueText}
             onChange={(_event, editor) => {
               const data = editor.getData();
               onChange(data as never);
             }}
           />
         );
-      case "select":
+      }
+      case "select": {
+        const valueSelect = value as TOption;
         return (
-          <select
-            value={value}
-            onChange={onChange}
-            defaultValue={
-              (options && options.length > 0 && options[0].value) || ""
-            }
-            className="cursor-pointer"
-          >
-            {options?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <Select
+            classNamePrefix="select"
+            value={valueSelect}
+            options={options}
+            onChange={(selectedOptions) => {
+              console.log(selectedOptions);
+              onChange(selectedOptions);
+            }}
+            getOptionLabel={(option: TOption) => option.label}
+            getOptionValue={(option: TOption) => option.value}
+            className="w-full"
+          />
         );
-      case "multi-select":
+      }
+      case "multi-select": {
+        const animatedComponents = makeAnimated();
+        const valueSelect = value as TOption[];
         return (
-          <select
-            value={value}
-            multiple
-            onChange={onChange}
-            className="cursor-pointer"
-          >
-            {options?.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+          <Select
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            className="w-full"
+            options={options}
+            value={valueSelect}
+            onChange={(selectedOptions) => {
+              onChange(selectedOptions);
+            }}
+            getOptionLabel={(option: TOption) => option.label}
+            getOptionValue={(option: TOption) => option.value}
+          />
         );
-      case "price":
+      }
+      case "price": {
+        const valueText = value as string;
         return (
           <div
             className={`text-base border bg-white border-[#B2B2B2] flex items-center rounded-[3px] w-full ${
@@ -84,7 +93,7 @@ const Input = (props: TForm) => {
             <input
               {...rest}
               id={name}
-              value={value}
+              value={valueText}
               onChange={onChange}
               autoFocus={autoFocus}
               disabled={disabled}
@@ -101,11 +110,13 @@ const Input = (props: TForm) => {
             </label>
           </div>
         );
-      default:
+      }
+      default: {
+        const valueText = value as string;
         return (
           <input
             {...rest}
-            value={value}
+            value={valueText}
             onBlur={onBlur}
             onChange={onChange}
             autoFocus={autoFocus}
@@ -116,6 +127,7 @@ const Input = (props: TForm) => {
             }`}
           />
         );
+      }
     }
   };
 

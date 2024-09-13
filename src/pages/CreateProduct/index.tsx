@@ -9,10 +9,13 @@ import useProductApi from "../../hooks/useProductApi";
 import useProductTypesApi from "../../hooks/useProductTypesApi";
 import { TCreateProduct } from "../../types/form.type";
 import { useDispatch } from "react-redux";
-import { setProductTypes } from "../../stores/reducers/product.reducer";
+import {
+  setProductTypes,
+  setTags,
+} from "../../stores/reducers/product.reducer";
 import useTagsApi from "../../hooks/useTagsApi";
 
-const schema = yup.object({
+const schema = yup.object().shape({
   title: yup.string().trim().required("Title is required!"),
   description: yup.string().required("Description is required!"),
   price: yup
@@ -20,7 +23,6 @@ const schema = yup.object({
     .trim()
     .required("Price is required!")
     .matches(/^\d*\.?\d*$/, "Please enter correct price format!"),
-  productType: yup.string(),
   tags: yup.array(),
 });
 
@@ -29,6 +31,7 @@ export default function CreateProduct() {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<TCreateProduct>({
     resolver: yupResolver(schema),
@@ -38,7 +41,13 @@ export default function CreateProduct() {
   const { tags, fetchTags } = useTagsApi();
 
   const onSubmit = async (data: TCreateProduct) => {
-    createProduct(data);
+    const dataConvert = {
+      ...data,
+      tags: data?.tags?.map((tag) => tag.value),
+      productType: data?.productType?.value,
+    };
+    createProduct(dataConvert);
+    reset();
   };
 
   useEffect(() => {
@@ -64,7 +73,7 @@ export default function CreateProduct() {
   useEffect(() => {
     if (tags)
       dispatch(
-        setProductTypes(
+        setTags(
           tags?.map((type) => ({
             value: type.value,
             label: type.label,
