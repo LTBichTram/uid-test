@@ -28,5 +28,12 @@ select {
   display: none;
 }
 
-select {
+.select__control.select__control--is-focused.select__control--menu-is-open.css-t3ipsp-control,
+.css-t3ipsp-control {
+  border: 2px solid var(--primary) !important;
+  box-shadow: none !important;
+}
+.select__option.select__option--is-focused.css-d7l1ni-option,
+.css-d7l1ni-option {
+  background-color: #39cdba21 !important;
 }

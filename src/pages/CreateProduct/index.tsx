@@ -14,6 +14,7 @@ import {
   setTags,
 } from "../../stores/reducers/product.reducer";
 import useTagsApi from "../../hooks/useTagsApi";
+import { toast } from "react-toastify";
 
 const schema = yup.object().shape({
   title: yup.string().trim().required("Title is required!"),
@@ -36,7 +37,7 @@ export default function CreateProduct() {
   } = useForm<TCreateProduct>({
     resolver: yupResolver(schema),
   });
-  const { createProduct } = useProductApi();
+  const { createProduct, error } = useProductApi();
   const { productTypes, fetchProductTypes } = useProductTypesApi();
   const { tags, fetchTags } = useTagsApi();
 
@@ -47,6 +48,7 @@ export default function CreateProduct() {
       productType: data?.productType?.value,
     };
     createProduct(dataConvert);
+    if (!error) toast.success("Create successfully!");
     reset();
   };
 
